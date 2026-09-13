@@ -1,0 +1,647 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{cite}
+\usepackage{amsmath}
+
+\renewcommand{\chaptername}{Chapter}
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}
+{\chaptername\ \thechapter}
+{20pt}
+{\Huge}
+
+\lstset{
+basicstyle=\ttfamily\small,
+breaklines=true,
+frame=single,
+columns=fullflexible
+}
+
+\begin{document}
+
+%-------------------------------------------------
+% TITLE PAGE
+%-------------------------------------------------
+
+\begin{titlepage}
+
+\begin{center}
+
+\vspace*{1cm}
+
+\includegraphics[width=0.35\textwidth]{logo.png}
+
+\vspace{0.8cm}
+
+{\small \textbf{Dr. M. S. Sheshgiri Campus, Belagavi, 590008}}\\[0.2cm]
+
+{\small \textcolor{red}{\textbf{Department of Electronics \& Communication Engineering}}}
+
+\vspace{1.5cm}
+
+{\Huge \textbf{MINOR PROJECT REPORT}}\\[0.3cm]
+{\Huge \textbf{PCB FAULT DETECTION AND RECONSTRUCTION}}
+
+\vspace{1cm}
+
+{\Large \textbf{Using Generative AI and Computer Vision}}
+
+\vspace{1.5cm}
+
+{\large \textbf{(Semester VI)}}\\[0.8cm]
+
+{\large \textbf{Course Code: 25EECW302}}
+
+\vspace{1.5cm}
+
+{\Large \textbf{Submitted By}}
+
+\vspace{0.5cm}
+
+\begin{tabular}{ll}
+Nandini Mohangekar & 02FE23BEC048 \\
+Akshaya Goudar & 02FE23BEC029 \\
+Aditya Dhaded & 02FE23BEC051 \\
+Deepak Kajagar & 02FE23BEC066 \\
+\end{tabular}
+
+\vspace{1.5cm}
+
+{\large \textbf{Under the Guidance of}}\\[0.3cm]
+Prof. Guide Name
+
+\vfill
+
+Department of Electronics \& Communication Engineering\\
+KLE Technological University\\
+Dr. M. S. Sheshgiri Campus, Belagavi
+
+\vspace{1cm}
+
+{\large \textbf{Academic Year 2025 -- 2026}}
+
+\end{center}
+
+\end{titlepage}
+
+%-------------------------------------------------
+
+\tableofcontents
+\newpage
+
+%-------------------------------------------------
+% CHAPTER 1
+%-------------------------------------------------
+
+\chapter{Introduction}
+
+\section{Introduction}
+
+Printed Circuit Boards (PCBs) are essential parts of almost all electronic systems. They provide electrical connections between components such as resistors, capacitors, integrated circuits, sensors, connectors and microcontrollers. The reliability of an electronic product depends on the quality of the PCB, solder joints, traces and component placement.
+
+During manufacturing, assembly, repair or long-term usage, PCBs may develop several faults. Common PCB defects include solder bridges, cold solder joints, missing components, burnt components, lifted pads, board cracks, oxidation, delamination, open circuit traces and short circuits. Manual inspection of PCBs requires skilled technicians and can be time-consuming. It may also become inconsistent when large numbers of boards are inspected.
+
+The proposed project, \textbf{PCB Fault Detection and Reconstruction}, is designed to assist PCB inspection using Python, computer vision and generative artificial intelligence. The application accepts a PCB image from the user, preprocesses it using OpenCV, analyzes it using a vision-based AI model and displays a structured fault report through a Streamlit dashboard.
+
+Along with fault detection, the system also provides a reconstruction guide. The reconstruction module describes how a healthy, defect-free PCB should look and provides repair steps. The system also supports reconstructed image generation. When image-generation quota is available, a generated healthy PCB reference image can be produced. If quota is unavailable, a local computer vision based reconstruction preview is created using patch repair and inpainting.
+
+The system is developed as a local web application and runs on localhost using Streamlit. It provides an easy-to-use interface for uploading PCB images, viewing analysis results, checking repair guidance and downloading the reconstructed image.
+
+%-------------------------------------------------
+% CHAPTER 2
+%-------------------------------------------------
+
+\chapter{Literature Survey}
+
+\section{Literature Survey}
+
+PCB inspection has traditionally been carried out using manual visual inspection and automated optical inspection systems. Manual inspection is simple but depends heavily on the skill of the technician. Automated Optical Inspection (AOI) systems use cameras and image processing methods to detect defects on PCB surfaces \cite{ref1}.
+
+Image processing techniques such as thresholding, edge detection, color segmentation, contour detection and morphological filtering are widely used for identifying visible PCB defects. These methods are useful for detecting cracks, burnt regions, missing tracks and soldering defects. However, rule-based methods may fail when image quality, lighting conditions or PCB layout changes \cite{ref2}.
+
+Deep learning based methods such as Convolutional Neural Networks (CNNs) have improved defect classification and localization. These methods can learn features directly from images and provide better accuracy when sufficient training data is available. However, creating a large labeled PCB defect dataset requires time and effort \cite{ref3}.
+
+Recent multimodal generative AI models are capable of analyzing images along with text instructions. These models can understand the visual content of the PCB and generate structured explanations. In this project, a vision model is used to analyze PCB images and return a JSON-based fault report \cite{ref4}.
+
+For reconstruction, generative AI can describe the healthy version of a faulty PCB and produce a reference image prompt. Image generation models can also be used to create a visual reconstruction of a defect-free PCB. When image-generation services are unavailable, local computer vision methods such as inpainting can be used to create an approximate repaired preview \cite{ref5}.
+
+\section{Literature Survey Table}
+
+\begin{longtable}{|c|p{4cm}|p{4cm}|p{4cm}|}
+
+\hline
+\textbf{Sl No.} & \textbf{Paper/Area} & \textbf{Methods Used} & \textbf{Limitations} \\
+\hline
+
+1 & Automated Optical Inspection for PCB & Camera-based inspection, template matching, image comparison & Requires controlled lighting and reference templates \\
+\hline
+
+2 & Image Processing Based PCB Defect Detection & Thresholding, edge detection, morphology, segmentation & Sensitive to noise, lighting and PCB layout variations \\
+\hline
+
+3 & Deep Learning for PCB Defect Classification & CNN, object detection, trained image models & Requires large labeled datasets and training resources \\
+\hline
+
+4 & Multimodal AI for Visual Inspection & Image input with text prompts, structured response generation & Output depends on model capability and prompt quality \\
+\hline
+
+5 & Image Reconstruction and Inpainting & Generative image models, OpenCV inpainting, patch repair & AI image generation depends on quota; local repair is approximate \\
+\hline
+
+\end{longtable}
+
+%-------------------------------------------------
+% CHAPTER 3
+%-------------------------------------------------
+
+\chapter{Problem Statement and Objectives}
+
+\section{Problem Statement}
+
+Manual PCB inspection is time-consuming and may produce inconsistent results. Small defects such as solder bridges, insufficient solder, burnt marks or damaged traces can be missed during visual inspection. In addition, after detecting a fault, users may not have a clear guide showing how the healthy PCB should look after repair.
+
+Therefore, a web-based system is required to detect PCB faults from an uploaded image, provide structured analysis, generate repair guidance and display a reconstructed image preview of the healthy PCB.
+
+\section{Objectives}
+
+\begin{itemize}
+
+\item To develop a Python-based PCB fault detection application
+
+\item To upload and validate PCB images in JPG and PNG formats
+
+\item To preprocess PCB images using OpenCV
+
+\item To analyze PCB images using a vision-based AI model
+
+\item To display PASS/FAIL status, quality score and defect details
+
+\item To generate a healthy PCB reconstruction guide
+
+\item To generate or preview a reconstructed healthy PCB image
+
+\item To provide a Streamlit dashboard for easy user interaction
+
+\end{itemize}
+
+%-------------------------------------------------
+% CHAPTER 4
+%-------------------------------------------------
+
+\chapter{System Requirements and Specifications}
+
+\section{Hardware Requirements}
+
+\begin{itemize}
+
+\item Laptop or Desktop Computer
+\item Minimum 4 GB RAM
+\item Internet Connection for AI API Access
+\item PCB Image Dataset or Camera Captured PCB Images
+
+\end{itemize}
+
+\section{Software Requirements}
+
+\begin{itemize}
+
+\item Python 3.10 or above
+\item Streamlit
+\item OpenCV
+\item Pillow
+\item NumPy
+\item Python-dotenv
+\item Google Generative AI SDK
+\item Google GenAI SDK
+\item Web Browser
+
+\end{itemize}
+
+\section{Specifications}
+
+\begin{itemize}
+
+\item Image upload support for JPG and PNG
+\item Maximum file size limit of 10 MB
+\item Image resizing up to 1024 pixels
+\item Contrast enhancement using CLAHE
+\item JSON-based structured fault report
+\item Reconstruction steps as checklist
+\item Reconstructed image preview and download option
+\item Local deployment on localhost port 8501
+
+\end{itemize}
+
+%-------------------------------------------------
+% CHAPTER 5
+%-------------------------------------------------
+
+\chapter{Proposed System}
+
+\section{Proposed System}
+
+The proposed system is a complete end-to-end PCB fault detection and reconstruction web application. The user uploads a PCB image through the Streamlit interface. The uploaded image is validated and preprocessed using OpenCV. The processed image is then sent to a vision model for analysis.
+
+The fault detection module returns the overall status of the PCB, confidence score, detected defects, severity level, defect location, recommended action and component-wise analysis. The results are displayed in the dashboard using badges, progress bars, expandable defect cards and tables.
+
+The reconstruction module uses the same uploaded PCB image and produces a repair guide. It identifies the board type, estimated repair difficulty, repair steps, healthy board description and a reference prompt for image generation.
+
+The reconstructed image module attempts to generate a healthy PCB reference image. If image-generation quota is unavailable, a local computer vision based preview is generated using patch repair and inpainting.
+
+\section{Block Diagram}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{block_diagram.png}
+\caption{Block Diagram of PCB Fault Detection and Reconstruction System}
+\end{figure}
+
+%-------------------------------------------------
+% CHAPTER 6
+%-------------------------------------------------
+
+\chapter{Methodology}
+
+\section{Image Upload and Validation}
+
+The application allows users to upload PCB images in JPG or PNG format. The uploaded file is checked for file type, image validity and file size. Files larger than 10 MB are rejected to avoid unnecessary memory usage and processing delay.
+
+\section{Image Preprocessing}
+
+The image preprocessing module performs resizing, RGB conversion and contrast enhancement. If the image is larger than 1024 pixels, it is resized while maintaining the aspect ratio. The image is converted to RGB format and CLAHE is applied on the L channel of the LAB color space. This improves trace visibility and makes dark damaged regions more noticeable.
+
+\section{Fault Detection}
+
+The preprocessed PCB image is sent to the AI vision model with a prompt that instructs it to act as an expert PCB quality control inspector. The model returns only valid JSON so that the application can parse and display the results.
+
+\section{Reconstruction Guidance}
+
+The reconstruction module sends the same PCB image with a restoration-focused prompt. The output contains the board type, repair steps, healthy board description, reference image prompt, repair difficulty and summary.
+
+\section{Reconstructed Image Generation}
+
+The system attempts to generate a reconstructed healthy PCB image using an image-capable AI model. If quota is exhausted or unavailable, the system generates a local preview using OpenCV. The local method detects damaged dark regions, searches for a clean donor patch, blends the patch and applies inpainting to smooth the repaired region.
+
+%-------------------------------------------------
+% CHAPTER 7
+%-------------------------------------------------
+
+\chapter{Implementation}
+
+\section{Implementation Environment}
+
+The project was implemented using Python and Streamlit. The code was divided into separate modules to make the system easier to understand, maintain and debug.
+
+\section{Project Files}
+
+\begin{longtable}{|c|p{5cm}|p{6cm}|}
+
+\hline
+\textbf{Sl. No} & \textbf{File Name} & \textbf{Description} \\
+\hline
+
+1 & app.py & Main Streamlit dashboard and application control flow \\
+\hline
+
+2 & detector.py & Fault detection prompt and response normalization \\
+\hline
+
+3 & reconstructor.py & Reconstruction guide generation logic \\
+\hline
+
+4 & gemini\_client.py & AI API wrapper, JSON parsing and image generation \\
+\hline
+
+5 & image\_utils.py & Image validation, preprocessing and local reconstruction preview \\
+\hline
+
+6 & ui\_components.py & Reusable UI elements such as badges, cards and tables \\
+\hline
+
+7 & requirements.txt & Required Python libraries \\
+\hline
+
+8 & start\_dashboard.bat & Windows startup launcher for local deployment \\
+\hline
+
+\end{longtable}
+
+\section{Dashboard Implementation}
+
+The dashboard contains three main tabs:
+
+\begin{itemize}
+
+\item Dashboard
+\item Fault Detection
+\item Reconstruction Guide
+
+\end{itemize}
+
+The Dashboard tab shows image readiness, AI engine status, quality score, reconstructed image status, defect severity breakdown and session activity. The Fault Detection tab displays the uploaded PCB image and fault report. The Reconstruction Guide tab displays repair steps, healthy-board description and reconstructed image output.
+
+\section{Dashboard Screenshot}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{dashboard.png}
+\caption{PCB Fault Detection and Reconstruction Dashboard}
+\end{figure}
+
+%-------------------------------------------------
+% CHAPTER 8
+%-------------------------------------------------
+
+\chapter{Mathematical Expression}
+
+\section{Quality Score Representation}
+
+The quality score of the PCB is represented on a scale of 0 to 100:
+
+\[
+Q = 100 - D_s
+\]
+
+Where:
+
+\begin{itemize}
+
+\item Q = PCB quality score
+\item D_s = Defect severity penalty
+
+\end{itemize}
+
+The AI model estimates the quality score based on the number of defects, severity of defects, visible damage, component condition and board surface quality.
+
+\section{Severity Priority}
+
+The severity of detected defects is classified as:
+
+\[
+LOW < MEDIUM < HIGH < CRITICAL
+\]
+
+Critical defects such as burnt components, short circuits and severe trace damage reduce the quality score more than low-level cosmetic defects.
+
+%-------------------------------------------------
+% CHAPTER 9
+%-------------------------------------------------
+
+\chapter{Code}
+
+\section{Python Code Snippet}
+
+The following code shows the image preprocessing function used in the application:
+
+\begin{lstlisting}[language=Python]
+def preprocess_image(image_bytes, max_size=1024,
+                     enhance_contrast=True):
+    validation = validate_image_bytes(image_bytes)
+    if not validation.is_valid:
+        raise ValueError(validation.message)
+
+    with Image.open(io.BytesIO(image_bytes)) as image:
+        rgb = np.array(image.convert("RGB"))
+
+    resized = resize_if_larger(rgb, max_size=max_size)
+
+    if enhance_contrast:
+        processed = enhance_contrast_clahe(resized)
+    else:
+        processed = resized
+
+    encoded = encode_rgb_image(processed,
+                               output_format="JPEG")
+
+    return encoded
+\end{lstlisting}
+
+\section{Fault Detection Logic}
+
+The fault detection module sends the preprocessed PCB image and structured prompt to the vision model. The response is parsed as JSON and displayed in the dashboard.
+
+\begin{lstlisting}[language=Python]
+def detect_pcb_faults(image_bytes, client):
+    raw_result = client.send_image_prompt(
+        image_bytes=image_bytes,
+        system_prompt=DETECTION_PROMPT
+    )
+    return normalize_detection_result(raw_result)
+\end{lstlisting}
+
+%-------------------------------------------------
+% CHAPTER 10
+%-------------------------------------------------
+
+\chapter{Simulation and Analysis}
+
+\section{Simulation and Analysis}
+
+The application was tested locally using Streamlit. PCB images were uploaded through the browser interface and analyzed using the dashboard. The image preprocessing module successfully resized and enhanced the images. Fault detection results were displayed in structured format.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{fault_detection.png}
+\caption{Fault Detection Output}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{reconstruction.png}
+\caption{Reconstruction Guide and Image Output}
+\end{figure}
+
+The analysis verified that the system can detect visible PCB faults and generate repair guidance. The reconstructed image feature provides a visual reference of the expected healthy PCB. When AI image quota is unavailable, the local preview is generated using OpenCV.
+
+%-------------------------------------------------
+% CHAPTER 11
+%-------------------------------------------------
+
+\chapter{Flow Chart}
+
+\section{Flow Chart}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{flowchart.png}
+\caption{Flow Chart of PCB Fault Detection and Reconstruction}
+\end{figure}
+
+The flowchart explains the complete working of the system. Initially, the user uploads a PCB image. The system validates the file and preprocesses the image. The processed image is analyzed for faults. If defects are found, the system displays the severity, location and recommended action.
+
+After fault detection, the reconstruction module generates repair steps and healthy-board description. The system then generates a reconstructed image using the image-generation model or the local OpenCV preview method. Finally, all results are displayed on the dashboard.
+
+%-------------------------------------------------
+% CHAPTER 12
+%-------------------------------------------------
+
+\chapter{Testing and Results}
+
+\section{Testing and Results}
+
+The application was tested using PCB images with visible burnt and damaged regions. The following test cases were verified:
+
+\begin{itemize}
+
+\item PCB image upload worked successfully
+
+\item Invalid file types were rejected
+
+\item Image size limit was enforced
+
+\item Preprocessed image was displayed correctly
+
+\item Fault detection produced structured output
+
+\item Defect cards displayed severity and recommended action
+
+\item Reconstruction guide generated repair steps
+
+\item Reconstructed image preview was displayed
+
+\item Reconstructed image download option worked
+
+\end{itemize}
+
+\section{Test Case Table}
+
+\begin{longtable}{|c|p{4cm}|p{5cm}|p{3cm}|}
+
+\hline
+\textbf{Sl No.} & \textbf{Test Case} & \textbf{Expected Output} & \textbf{Status} \\
+\hline
+
+1 & Upload valid PCB image & Image preview displayed & Verified \\
+\hline
+
+2 & Upload invalid file & Error message displayed & Verified \\
+\hline
+
+3 & Analyze PCB & PASS/FAIL and defects shown & Verified \\
+\hline
+
+4 & Generate reconstruction guide & Repair steps displayed & Verified \\
+\hline
+
+5 & Generate reconstructed image & Image preview displayed & Verified \\
+\hline
+
+6 & Download image & PNG file downloaded & Verified \\
+\hline
+
+\end{longtable}
+
+%-------------------------------------------------
+% CHAPTER 13
+%-------------------------------------------------
+
+\chapter{Applications and Future Scope}
+
+\section{Applications}
+
+\begin{itemize}
+
+\item PCB manufacturing quality inspection
+\item Electronics repair laboratories
+\item Academic electronics laboratories
+\item Prototype PCB verification
+\item Embedded system project testing
+\item Training students to identify PCB defects
+\item Maintenance of electronic equipment
+
+\end{itemize}
+
+\section{Future Scope}
+
+\begin{itemize}
+
+\item Add bounding boxes around detected defects
+\item Train a custom PCB defect detection model
+\item Improve reconstructed image quality using dedicated restoration models
+\item Add real-time camera-based PCB inspection
+\item Generate automatic PDF inspection reports
+\item Support batch processing of multiple PCB images
+\item Integrate electrical continuity test results
+\item Deploy the system on a local network server
+
+\end{itemize}
+
+%-------------------------------------------------
+% CHAPTER 14
+%-------------------------------------------------
+
+\chapter{Advantages and Limitations}
+
+\section{Advantages}
+
+\begin{itemize}
+
+\item Simple and user-friendly dashboard
+\item Supports PCB image upload and validation
+\item Uses OpenCV preprocessing for better image clarity
+\item Generates structured fault detection report
+\item Provides severity-based defect classification
+\item Generates reconstruction guidance
+\item Provides reconstructed image preview
+\item Supports local deployment
+\item Includes download option for reconstructed image
+
+\end{itemize}
+
+\section{Limitations}
+
+\begin{itemize}
+
+\item Accuracy depends on PCB image quality
+\item Small defects may be difficult to detect
+\item AI output should be verified by a technician
+\item Image generation depends on API quota availability
+\item Local reconstruction preview is approximate
+\item The system does not perform electrical testing
+
+\end{itemize}
+
+%-------------------------------------------------
+% CHAPTER 15
+%-------------------------------------------------
+
+\chapter{Conclusion}
+
+\section{Conclusion}
+
+The PCB Fault Detection and Reconstruction system was successfully designed and implemented using Python, Streamlit, OpenCV and generative AI. The system accepts PCB images, preprocesses them and performs fault analysis using a vision model. It displays the results in a structured dashboard with quality score, PASS/FAIL status, defect details, component analysis and repair recommendations.
+
+The reconstruction module generates a detailed repair guide and explains how the healthy PCB should appear after correction. The system also provides a reconstructed image feature. If image-generation quota is available, the system can generate a healthy PCB reference image. If the quota is unavailable, a local OpenCV-based reconstruction preview is generated.
+
+Overall, the project demonstrates how computer vision and generative AI can be combined for PCB inspection and repair support. The application is useful for electronics laboratories, repair centers and student projects. It provides a practical and interactive solution for PCB fault detection and reconstruction.
+
+%-------------------------------------------------
+\begin{thebibliography}{99}
+
+\bibitem{ref1}
+S. Moganti, F. Ercal, C. H. Dagli and S. Tsunekawa, ``Automatic PCB Inspection Algorithms: A Survey,'' Computer Vision and Image Understanding, vol. 63, no. 2, pp. 287--313, 1996.
+
+\bibitem{ref2}
+R. Heriansyah, S. A. R. Abu-Bakar and M. M. Mokji, ``Machine Vision for Printed Circuit Board Inspection,'' Journal of Electrical Engineering, vol. 7, no. 1, pp. 1--10, 2007.
+
+\bibitem{ref3}
+J. Huang and B. Kong, ``PCB Defect Detection Based on Deep Learning,'' International Conference on Computer Vision and Pattern Recognition Workshops, pp. 1--6, 2019.
+
+\bibitem{ref4}
+OpenAI, ``Multimodal AI Models for Image Understanding,'' Technical Documentation, 2024.
+
+\bibitem{ref5}
+G. Bradski, ``The OpenCV Library,'' Dr. Dobb's Journal of Software Tools, 2000.
+
+\end{thebibliography}
+
+\end{document}
